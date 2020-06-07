@@ -1,0 +1,44 @@
+<beans:beans
+        xmlns="http://www.springframework.org/schema/security"
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xmlns:p="http://www.springframework.org/schema/p"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/security
+              http://www.springframework.org/schema/security/spring-security.xsd">
+
+    <http pattern="/css/**" security="none"/>
+    <http pattern="/fonts/**" security="none"/>
+    <http pattern="/images/**" security="none"/>
+    <http pattern="/js/**" security="none"/>
+    <http pattern="/lib/**" security="none"/>
+    <http pattern="/common/**" security="none"/>
+
+
+    <http auto-config="true">
+        <csrf disabled="true"/>
+        <!-- 可以定义多个，逻辑和定义顺序相关 -->
+        <intercept-url pattern="/" access="permitAll()"/>
+        <intercept-url pattern="/login" access="permitAll()"/>
+        <intercept-url pattern="/register" access="permitAll()"/>
+        <intercept-url pattern="/contact" access="permitAll()"/>
+        <intercept-url pattern="/admin/**" access="hasRole('ADMIN')"/>
+        <intercept-url pattern="/**" access="hasRole('USER')"/>
+        <!-- 注意这里的失败和成功url有forward和非forward两种！！ -->
+        <!-- 定义target，login-processing-url，default-target-url登录成功重定向的url -->
+        <form-login login-page="/login" default-target-url="/" always-use-default-target="true"/>
+        <logout invalidate-session="true" logout-url="/logout" logout-success-url="/"/>
+        <!--<http-basic/>-->
+        <headers>
+            <frame-options policy="SAMEORIGIN"/>
+        </headers>
+    </http>
+    <authentication-manager>
+        <authentication-provider user-service-ref="userService">
+        </authentication-provider>
+    </authentication-manager>
+</beans:beans>
